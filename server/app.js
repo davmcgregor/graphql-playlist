@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 const express = require("express");
 const graphqlHTTP = require("express-graphql");
 const schema = require("./schema/schema");
@@ -9,8 +11,13 @@ const username = process.env.USERNAME
 const password = process.env.PASSWORD
 
 mongoose.connect(
-  `mongodb+srv://${username}:${password}@reading-list-cluster-srbnf.mongodb.net/test?retryWrites=true&w=majority`
+  `mongodb+srv://${username}:${password}@reading-list-cluster-srbnf.mongodb.net/test?retryWrites=true&w=majority`,
+  { useNewUrlParser: true },
 );
+mongoose.connection.once('open', () => {
+  console.log('connected to database')
+})
+
 app.use(
   "/graphql",
   graphqlHTTP({
